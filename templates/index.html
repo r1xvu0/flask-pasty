@@ -1,0 +1,50 @@
+{% extends "base.html" %}
+
+{% block title %}Home{% endblock %}
+
+{% block content %}
+<div class="container mx-auto px-4 py-8">
+    <h1 class="text-3xl font-bold mb-8">Your Entries</h1>
+    <a href="{{ url_for('editor') }}" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mb-4 inline-block">Create New Entry</a>
+    <ul class="space-y-4">
+        {% for entry in entries %}
+            <li class="bg-white dark:bg-dark-200 p-4 rounded shadow-md">
+                <div class="flex justify-between items-center">
+                    <a href="{{ url_for('view_entry', custom_url=entry.custom_url) }}" class="text-xl font-semibold text-blue-600 dark:text-blue-400 hover:underline">{{ entry.title }}</a>
+                    <div>
+                        {% if entry.is_owner %}
+                            <a href="{{ url_for('edit_entry', custom_url=entry.custom_url) }}" class="text-green-500 hover:text-green-700 mr-2">Edit</a>
+                            <form action="{{ url_for('delete_entry', custom_url=entry.custom_url) }}" method="POST" class="inline">
+                                <button type="submit" class="text-red-500 hover:text-red-700" onclick="return confirm('Are you sure you want to delete this entry?')">Delete</button>
+                            </form>
+                        {% endif %}
+                    </div>
+                </div>
+                <p class="text-gray-600 dark:text-gray-400 mt-2">Status: {{ 'Public' if entry.public else 'Private' }}</p>
+            </li>
+        {% else %}
+            <li class="text-center text-gray-600 dark:text-gray-400">No entries found. Create your first entry!</li>
+        {% endfor %}
+    </ul>
+</div>
+{% endblock %}
+
+{% block extra_css %}
+<style>
+    .toggle-bg {
+        transition: background-color 0.2s;
+    }
+    .toggle-dot {
+        transition: transform 0.2s;
+    }
+    input:checked + .toggle-bg {
+        background-color: #4CAF50;
+    }
+    input:checked + .toggle-bg + .toggle-dot {
+        transform: translateX(100%);
+    }
+    .dark input:checked + .toggle-bg {
+        background-color: #68D391;
+    }
+</style>
+{% endblock %}

@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+
+{% block title %}Explore Public Pastes{% endblock %}
+
+{% block content %}
+<h1 class="text-3xl font-bold text-center mb-8">Explore Public Pastes</h1>
+<ul class="bg-white dark:bg-dark-200 rounded-lg shadow-md max-w-2xl mx-auto divide-y divide-gray-200 dark:divide-gray-700">
+    {% for entry in public_entries %}
+        <li class="py-4 px-6">
+            <a href="{{ url_for('view_entry', custom_url=entry.custom_url) }}" class="text-blue-500 dark:text-blue-400 hover:underline">
+                <h2 class="text-xl font-semibold">{{ entry.title }}</h2>
+            </a>
+            <p class="text-sm text-gray-600 dark:text-gray-400">By {{ entry.username }}</p>
+        </li>
+    {% endfor %}
+</ul>
+{% endblock %}

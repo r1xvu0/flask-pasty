@@ -1,0 +1,43 @@
+{% extends "base.html" %}
+
+{% block title %}Markdown Editor - New Entry{% endblock %}
+
+{% block content %}
+<div class="container mx-auto px-4 py-8">
+    <h1 class="text-3xl font-bold text-center mb-8">New Entry</h1>
+    <div class="flex flex-col lg:flex-row gap-8">
+        <form class="bg-white dark:bg-dark-200 p-6 rounded shadow-md w-full lg:w-2/5" method="POST">
+            <div class="mb-4">
+                <label class="block text-gray-700 dark:text-gray-300 text-sm font-bold mb-2" for="title">Title:</label>
+                <input class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 dark:text-gray-300 dark:bg-dark-300 leading-tight focus:outline-none focus:shadow-outline" type="text" id="title" name="title" value="{{ entry.title if entry else '' }}" required>
+            </div>
+            <div class="mb-4">
+                <label class="block text-gray-700 dark:text-gray-300 text-sm font-bold mb-2" for="content">Content:</label>
+                <textarea class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 dark:text-gray-300 dark:bg-dark-300 leading-tight focus:outline-none focus:shadow-outline" id="content" name="content" rows="20" required
+          hx-post="{{ url_for('preview') }}"
+          hx-trigger="keyup change delay:500ms, load"
+          hx-target="#preview">{{ entry.content if entry else '' }}</textarea>
+            </div>
+            <div class="mb-4">
+                <label class="block text-gray-700 dark:text-gray-300 text-sm font-bold mb-2" for="custom_url">Custom URL (optional):</label>
+                <input class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 dark:text-gray-300 dark:bg-dark-300 leading-tight focus:outline-none focus:shadow-outline" type="text" id="custom_url" name="custom_url" value="{{ entry.custom_url if entry else '' }}">
+            </div>
+            <div class="mb-4">
+    <label class="flex items-center">
+        <input type="checkbox" class="form-checkbox" name="public" id="public" {% if entry and entry.public %}checked{% endif %}>
+
+        <span class="ml-2">Make this paste public</span>
+    </label>
+</div>
+            <div class="flex justify-between">
+                <button class="bg-blue-500 dark:bg-blue-600 hover:bg-blue-700 dark:hover:bg-blue-800 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline" type="submit">Save</button>
+                <a href="{{ url_for('index') }}" class="bg-gray-500 dark:bg-gray-600 hover:bg-gray-700 dark:hover:bg-gray-800 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">Cancel</a>
+            </div>
+        </form>
+        <div class="w-full lg:w-3/5">
+            <!-- <h2 class="text-2xl font-bold mb-4">Preview:</h2> -->
+            <div id="preview" class="bg-white dark:bg-dark-200 p-6 rounded shadow-md prose dark:prose-invert prose-lg markdown-body max-w-none overflow-auto" style="max-height: 800px;"></div>
+        </div>
+    </div>
+</div>
+{% endblock %}

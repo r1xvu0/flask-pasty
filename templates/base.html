@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Pasty{% endblock %}</title>
+    <script src="https://unpkg.com/htmx.org@1.6.1"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        dark: {
+                            100: '#1a1a1a',
+                            200: '#2a2a2a',
+                            300: '#3a3a3a',
+                            400: '#4a4a4a',
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <link rel="stylesheet" href="{{ url_for('static', filename='pygments.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='pygments-dark.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='markdown-preview.css') }}">
+    {% block extra_css %}{% endblock %}
+</head>
+<body class="bg-gray-100 dark:bg-dark-100 text-gray-900 dark:text-gray-100">
+    <nav class="bg-white dark:bg-dark-200 shadow-md">
+        <div class="container mx-auto px-6 py-3">
+            <div class="flex justify-between items-center">
+                <a href="{{ url_for('landing') }}" class="text-xl font-bold">Pasty</a>
+                <div>
+                    <a href="{{ url_for('explore') }}" class="text-blue-500 dark:text-blue-400 mr-4">Explore</a>
+                    {% if current_user.is_authenticated %}
+                        <a href="{{ url_for('index') }}" class="text-blue-500 dark:text-blue-400 mr-4">Home</a>
+                        <span class="mr-4">Welcome, {{ current_user.username }}</span>
+                        <a href="{{ url_for('logout') }}" class="text-blue-500 dark:text-blue-400">Logout</a>
+                    {% else %}
+                        <a href="{{ url_for('login') }}" class="text-blue-500 dark:text-blue-400 mr-4">Login</a>
+                        <a href="{{ url_for('register') }}" class="text-blue-500 dark:text-blue-400">Register</a>
+                    {% endif %}
+                    <button id="theme-toggle" class="ml-4 p-2 rounded-full bg-gray-200 dark:bg-dark-300">🌓</button>
+                </div>
+            </div>
+        </div>
+    </nav>
+    
+    <div class="container mx-auto mt-8 px-4">
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                {% for category, message in messages %}
+                    <div class="bg-{{ 'green' if category == 'success' else 'red' }}-100 dark:bg-{{ 'green' if category == 'success' else 'red' }}-900 border border-{{ 'green' if category == 'success' else 'red' }}-400 text-{{ 'green' if category == 'success' else 'red' }}-700 dark:text-{{ 'green' if category == 'success' else 'red' }}-300 px-4 py-3 rounded relative mb-4" role="alert">
+                        {{ message }}
+                    </div>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+        
+        {% block content %}{% endblock %}
+    </div>
+
+    <script>
+        const themeToggleButton = document.getElementById('theme-toggle');
+        themeToggleButton.addEventListener('click', function() {
+            document.documentElement.classList.toggle('dark');
+            localStorage.setItem('theme', document.documentElement.classList.contains('dark') ? 'dark' : 'light');
+        });
+
+        // Check for saved theme preference or use default dark theme
+        const theme = localStorage.getItem('theme') || 'dark';
+        if (theme === 'light') {
+            document.documentElement.classList.remove('dark');
+        }
+    </script>
+    {% block extra_js %}{% endblock %}
+
+    <script>
+    document.body.addEventListener('htmx:afterSwap', function(event) {
+        if (event.detail.target.classList.contains('toggle-input')) {
+            var toggleInput = event.detail.target;
+            var toggleDot = toggleInput.parentElement.querySelector('.toggle-dot');
+            var toggleText = toggleInput.closest('label').querySelector('.toggle-text');
+            
+            if (toggleInput.checked) {
+                toggleDot.style.transform = 'translateX(100%)';
+                toggleText.textContent = 'Public';
+            } else {
+                toggleDot.style.transform = 'translateX(0)';
+                toggleText.textContent = 'Private';
+            }
+        }
+    });
+    </script>
+</body>
+</html>

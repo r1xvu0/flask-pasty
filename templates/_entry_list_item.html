@@ -1,0 +1,33 @@
+<li id="entry-{{ entry.id }}" class="py-4 px-6 flex items-center justify-between">
+    <div class="flex items-center space-x-4">
+        <a href="{{ url_for('view_entry', entry_id=entry.id) }}" class="text-blue-500 dark:text-blue-400 hover:underline truncate">{{ entry.title }}</a>
+    </div>
+    <div class="flex items-center space-x-4">
+        <label class="flex items-center cursor-pointer">
+            <div class="relative">
+                <input type="checkbox" class="hidden toggle-input" 
+                       {% if entry.public %}checked{% endif %}
+                       hx-post="{{ url_for('toggle_visibility', entry_id=entry.id) }}"
+                       hx-swap="outerHTML"
+                       hx-target="#entry-{{ entry.id }}"
+                       hx-trigger="change">
+                <div class="toggle-bg bg-gray-200 dark:bg-gray-700 w-10 h-6 rounded-full shadow-inner"></div>
+                <div class="toggle-dot absolute w-4 h-4 bg-white rounded-full shadow inset-y-1 left-1"></div>
+            </div>
+            <div class="ml-3 text-gray-700 dark:text-gray-300 font-medium toggle-text">
+                {{ 'Public' if entry.public else 'Private' }}
+            </div>
+        </label>
+            <button class="bg-red-500 dark:bg-red-600 text-white py-1 px-3 rounded hover:bg-red-700 dark:hover:bg-red-800"
+                    hx-post="{{ url_for('delete_entry', entry_id=entry.id) }}"
+                    hx-confirm="Are you sure you want to delete this entry?"
+                    hx-target="#entry-{{ entry.id }}"
+                    hx-swap="outerHTML">
+                Delete
+            </button>
+            <a href="{{ url_for('edit_entry', entry_id=entry['id']) }}" class="bg-blue-500 hover:bg-blue-700 text-white py-1 px-3 rounded">
+                Edit
+            </a>
+        
+    </div>
+</li>

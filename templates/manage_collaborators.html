@@ -1,0 +1,41 @@
+{% extends "base.html" %}
+
+{% block title %}Manage Collaborators{% endblock %}
+
+{% block content %}
+<div class="container mx-auto px-4 py-8">
+    <h1 class="text-3xl font-bold text-center mb-8">Manage Collaborators</h1>
+    
+    <div class="max-w-md mx-auto bg-white dark:bg-dark-200 rounded-lg shadow-md p-6">
+        <h2 class="text-xl font-semibold mb-4">Current Collaborators</h2>
+        <ul class="list-disc list-inside mb-6">
+            {% for collaborator in collaborators %}
+                <li class="flex items-center justify-between">
+                    <span>{{ collaborator }}</span>
+                    <form method="POST" action="{{ url_for('remove_collaborator', custom_url=entry['custom_url'], username=collaborator) }}">
+                        <button type="submit" class="text-red-500 hover:text-red-700">Remove</button>
+                    </form>
+                </li>
+            {% else %}
+                <li class="text-gray-500">No collaborators yet</li>
+            {% endfor %}
+        </ul>
+        
+        <form method="POST" class="mb-4 dark:text-white">
+            <div class="mb-4">
+                <label for="collaborator" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Add Collaborator</label>
+                <input type="text" name="collaborator" id="collaborator" required
+                       class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 dark:bg-gray-700 dark:border-gray-600 dark:text-white focus:ring focus:ring-indigo-200 focus:ring-opacity-50 px-2 py-1">
+            </div>
+            <button type="submit" class="w-full bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">
+                Add Collaborator
+            </button>
+        </form>
+        
+        
+        <a href="{{ url_for('view_entry', custom_url=entry['custom_url']) }}" class="block text-center text-blue-500 hover:text-blue-700">
+            Back to Entry
+        </a>
+    </div>
+</div>
+{% endblock %}
