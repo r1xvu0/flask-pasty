@@ -11,6 +11,7 @@ import string
 import random
 import markdown
 from markdown.extensions import codehilite, fenced_code, tables, attr_list
+from dotenv import load_dotenv
 
 extra_tags = ['span', 'pre', 'code', 'div']
 extra_attrs = {
@@ -49,6 +50,7 @@ def markdown_filter(text):
 
     return Markup(clean_html)
 
+load_dotenv()
 app = Flask(__name__)
 app.jinja_env.filters['markdown'] = markdown_filter
 app.secret_key = 'supersecretkey'  # Change this to a real secret key in production
@@ -57,7 +59,9 @@ login_manager = LoginManager()
 login_manager.init_app(app)
 login_manager.login_view = 'login'
 
-DATABASE_URL = os.environ.get('DATABASE_URL', 'postgresql://pasty_owner:SB7dRzJr5aQO@ep-ancient-cake-a2au5gcb.eu-central-1.aws.neon.tech/pasty?sslmode=require')
+# DATABASE_URL = os.environ.get('DATABASE_URL', 'postgresql://pasty_owner:SB7dRzJr5aQO@ep-ancient-cake-a2au5gcb.eu-central-1.aws.neon.tech/pasty?sslmode=require')
+DATABASE_URL = os.environ.get('DATABASE_URL')
+# print(DATABASE_URL)
 
 def get_db():
     conn = psycopg2.connect(DATABASE_URL, sslmode='require', cursor_factory=DictCursor)
