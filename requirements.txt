@@ -9,5 +9,6 @@ Jinja2==3.1.4
 Markdown==3.7
 MarkupSafe==3.0.2
 psycopg2-binary==2.9.10
+python-dotenv==1.0.1
 webencodings==0.5.1
 Werkzeug==3.1.3
